@@ -140,6 +140,7 @@ if (location.hash.match("#langIfr")) {
                 style="border: none; position:absolute; left: calc(${
                     1 + count
                 } * ${width}); top: 0vh; width: ${width}; min-height: 100vh"
+                allow="fullscreen"
               ></iframe>`);
             document.body.appendChild(langIfr);
             return langIfr;

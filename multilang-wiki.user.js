@@ -45,7 +45,7 @@
 // @match            https://zh.wikipedia.org/zh-*/*
 // @grant            none
 // @run-at           document-start
-// @license          GPL-3.0+
+// @license          MIT
 // @supportURL       https://github.com/snomiao/multilang-wiki/issues
 // @downloadURL      https://github.com/snomiao/multilang-wiki/raw/main/multilang-wiki.user.js
 // @contributionURL  https://snomiao.com/donate

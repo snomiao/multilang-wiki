@@ -1,7 +1,7 @@
 # Wikipedia Multi Language View
 
 ![Version](https://img.shields.io/badge/version-0.0.6-blue)
-![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 A userscript that allows you to view Wikipedia articles in multiple languages side by side. Perfect for language learning and comparative reading.
 
@@ -76,7 +76,7 @@ If you encounter any issues or have questions, please [open an issue](https://gi
 
 ## License
 
-This project is licensed under the GPL-3.0+ License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 

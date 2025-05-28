@@ -15,7 +15,7 @@ A userscript that allows you to view Wikipedia articles in multiple languages si
 
 ## Screenshots
 
-(Screenshots to be added)
+![Tower of Babel](docs/Tower_of_Babel.png)
 
 ## Installation
 

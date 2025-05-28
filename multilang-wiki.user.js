@@ -54,29 +54,43 @@
 // ref:
 // [javascript - Resize Cross Domain Iframe Height - Stack Overflow]( https://stackoverflow.com/questions/22086722/resize-cross-domain-iframe-height )
 //
+// 2025-05-29 udpate: add more languages, support more than 2 columns
 
 // const Langs = ['en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it', 'ko', 'pt', 'ar', 'vi', 'pl', 'uk', 'nl', 'sv', 'id', 'fi', 'no', 'tr', 'cs', 'da', 'he', 'hu', 'ro', 'th']
-const langs = ['en', 'ja', 'zh'] // modify this to your preferred languages, will be used to load the 2nd language iframe
-// 
+const langs = ['en', 'fr', 'ja', 'zh'] // modify this to your preferred languages, will be used to load the 2nd language iframe
+//
+
+
+// hide sidebars
+function main(){
+  setTimeout(()=>{
+    [...document.body.querySelectorAll("#sidebarCollapse,.vector-pinnable-header-unpin-button")]
+      .filter(e=>e?.checkVisibility?.())
+      .map(e=>e?.click?.())
+  },1e3)
+}
+main()
+
 
 if (location.hash.match("#langIfr")) {
     // iframe code send height
     const sendHeight = () =>
         parent.postMessage?.(
-            { langIfr: { height: document.body.scrollHeight } },
+            { langIfr: { height: document.body.scrollHeight, lang: location.hash.match?.(/#langIfr-(..)/)?.[1] } },
             "*"
         );
     window.addEventListener("resize", sendHeight, false);
     window.addEventListener("load", sendHeight, false);
+
+
     sendHeight();
     document.head.appendChild(createHtmlElement('<base target="_parent" />'))
 } else {
     // parent code recv iframe's height
     const msgHandler = (e) => {
-        const setHeight = (height) =>
-            height &&
-            document.querySelector("#langIfr")?.setAttribute("height", height);
-        setHeight(e.data?.langIfr?.height);
+        const setHeight = ({height, lang}) =>
+            height && lang && document.querySelector?.(`.langIfr[lang=${lang}]`)?.setAttribute("height", height);
+        setHeight(e.data?.langIfr);
     };
     window.addEventListener("message", msgHandler, false);
     // load iframe
@@ -90,27 +104,38 @@ if (location.hash.match("#langIfr")) {
                 }))
                 .map((e) => [e.lang, e])
         );
+    const columns = (document.body.clientWidth / 800) | 0;
+    console.log('multilang-wiki: ' + columns + ' columns')
     const exlangFrameLoad = () => {
         const langLnks = langLnksGet();
+        const avaliableLangs = langs
+          .filter(lang => langLnks[lang])
+          .filter((lang,i)=> i< columns)
+        console.log('Avaliable languages: '+avaliableLangs)
+
+        const width =  (100 / (avaliableLangs.length+1)).toFixed(2) + 'vw';
         const langIframeLoad = (lang = "en") => {
-            if (!langLnks[lang]) return false;
-            document.body.setAttribute("style", "width: 50vw");
-            document.body.querySelector("#langIfr")?.remove();
-            document.querySelector("#sidebarCollapse")?.click();
-            const langIfr = Object.assign(document.createElement("iframe"), {
-                id: "langIfr",
-                src: langLnks[lang].href + "#langIfr",
-            });
-            langIfr.setAttribute(
-                "style",
-                "border: none; position:absolute; left: 50vw; top: 0vh; width: 50vw"
-            );
+            if (!langLnks[lang]) return null;
+            const count = [...document.querySelectorAll('.langIfr')].length
+            document.body.setAttribute("style", `width: ${width}; overflow-x: hidden`);
+            document.body.querySelector(`.langIfr[lang=${lang}]`)?.remove();
+            const langIfr = createHtmlElement(`
+              <iframe
+                class="langIfr"
+                lang="${lang}"
+                src="${langLnks[lang].href + "#langIfr-"+lang}"
+                style="border: none; position:absolute; left: calc(${1+count} * ${width}); top: 0vh; width: ${width}; min-height: 100vh"
+              ></iframe>`)
             document.body.appendChild(langIfr);
-            return true;
+            return langIfr;
         };
 
         // the load 2st language for current page
-        langs.find(lang => langIframeLoad(lang))
+
+        avaliableLangs
+          .forEach(lang=>langIframeLoad(lang))
+
+        // langs.find(lang => langIframeLoad(lang))
     };
     window.addEventListener("load", exlangFrameLoad, false);
 }

@@ -21,7 +21,7 @@
 // @name:no          Flerspråklig visning av Wikipedia
 // @namespace        https://userscript.snomiao.com/
 // @author           snomiao@gmail.com
-// @version          0.0.6
+// @version          0.0.8
 // @description      View a Wikipedia entry with two (or more?) languages side by side for comparison and language learning.
 // @description:zh   以并列多语言视角浏览维基百科
 // @description:ja   比較と語学学習のために、ウィキペディアの記事を2つ（またはそれ以上？）の言語で並べて表示します。

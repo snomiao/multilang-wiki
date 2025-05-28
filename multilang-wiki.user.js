@@ -47,7 +47,7 @@
 // @run-at           document-start
 // @license          MIT
 // @supportURL       https://github.com/snomiao/multilang-wiki/issues
-// @downloadURL      https://raw.githubusercontent.com/snomiao/multilang-wiki/main/multilang-wiki.user.js
+// @downloadURL      https://github.com/snomiao/multilang-wiki/raw/main/multilang-wiki.user.js
 // @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
 //

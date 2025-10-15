@@ -58,9 +58,12 @@
 // 2025-05-29 udpate: add more languages, support more than 2 columns
 
 // const Langs = ['en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it', 'ko', 'pt', 'ar', 'vi', 'pl', 'uk', 'nl', 'sv', 'id', 'fi', 'no', 'tr', 'cs', 'da', 'he', 'hu', 'ro', 'th']
-const langs = ["en", "fr", "ja", "zh"]; // modify this to your preferred languages, will be used to load the 2nd language iframe
+// can modify this to your preferred languages, will be used to load the 2nd language iframe
+const langs = navigator.languages
+    .map((e) => e.replace(/-.*/, ""))
+    .reduce((acc, lang) => (acc.add(lang), acc), new Set());
 
-function main() {
+(async function main() {
     // hide sidebars
     setTimeout(() => {
         [
@@ -71,8 +74,7 @@ function main() {
             .filter((e) => e?.checkVisibility?.())
             .map((e) => e?.click?.());
     }, 1e3);
-}
-main();
+})();
 
 if (location.hash.match("#langIfr")) {
     // iframe code send height

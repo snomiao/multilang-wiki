@@ -60,104 +60,104 @@
 // const Langs = ['en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it', 'ko', 'pt', 'ar', 'vi', 'pl', 'uk', 'nl', 'sv', 'id', 'fi', 'no', 'tr', 'cs', 'da', 'he', 'hu', 'ro', 'th']
 // can modify this to your preferred languages, will be used to load the 2nd language iframe
 const langs = navigator.languages
-    .map((e) => e.replace(/-.*/, ""))
-    .reduce((acc, lang) => (acc.add(lang), acc), new Set());
+  .map((e) => e.replace(/-.*/, ""))
+  .reduce((acc, lang) => (acc.add(lang), acc), new Set());
 
 (async function main() {
-    // hide sidebars
-    setTimeout(() => {
-        [
-            ...document.body.querySelectorAll(
-                "#sidebarCollapse,.vector-pinnable-header-unpin-button"
-            ),
-        ]
-            .filter((e) => e?.checkVisibility?.())
-            .map((e) => e?.click?.());
-    }, 1e3);
+  // hide sidebars
+  setTimeout(() => {
+    [
+      ...document.body.querySelectorAll(
+        "#sidebarCollapse,.vector-pinnable-header-unpin-button"
+      ),
+    ]
+      .filter((e) => e?.checkVisibility?.())
+      .map((e) => e?.click?.());
+  }, 1e3);
 })();
 
 if (location.hash.match("#langIfr")) {
-    // iframe code send height
-    const sendHeight = () =>
-        parent.postMessage?.(
-            {
-                langIfr: {
-                    height: document.body.scrollHeight,
-                    lang: location.hash.match?.(/#langIfr-(..)/)?.[1],
-                },
-            },
-            "*"
-        );
-    window.addEventListener("resize", sendHeight, false);
-    window.addEventListener("load", sendHeight, false);
+  // iframe code send height
+  const sendHeight = () =>
+    parent.postMessage?.(
+      {
+        langIfr: {
+          height: document.body.scrollHeight,
+          lang: location.hash.match?.(/#langIfr-(..)/)?.[1],
+        },
+      },
+      "*"
+    );
+  window.addEventListener("resize", sendHeight, false);
+  window.addEventListener("load", sendHeight, false);
 
-    sendHeight();
-    document.head.appendChild(createHtmlElement('<base target="_parent" />'));
+  sendHeight();
+  document.head.appendChild(createHtmlElement('<base target="_parent" />'));
 } else {
-    // parent code recv iframe's height
-    const msgHandler = (e) => {
-        const setHeight = ({ height, lang }) =>
-            height &&
-            lang &&
-            document
-                .querySelector?.(`.langIfr[lang=${lang}]`)
-                ?.setAttribute("height", height);
-        setHeight(e.data?.langIfr);
-    };
-    window.addEventListener("message", msgHandler, false);
-    // load iframe
-    const langLnksGet = () =>
-        Object.fromEntries(
-            [...document.querySelectorAll("a.interlanguage-link-target")]
-                .map((e) => ({
-                    lang: e.getAttribute("lang"),
-                    href: e.href,
-                    language: e.textContent,
-                }))
-                .map((e) => [e.lang, e])
-        );
-    const columns = (document.body.clientWidth / 800) | 0;
-    console.log("multilang-wiki: " + columns + " columns");
-    const exlangFrameLoad = () => {
-        const langLnks = langLnksGet();
-        const avaliableLangs = langs
-            .filter((lang) => langLnks[lang])
-            .filter((lang, i) => i < columns);
-        console.log("Avaliable languages: " + avaliableLangs);
+  // parent code recv iframe's height
+  const msgHandler = (e) => {
+    const setHeight = ({ height, lang }) =>
+      height &&
+      lang &&
+      document
+        .querySelector?.(`.langIfr[lang=${lang}]`)
+        ?.setAttribute("height", height);
+    setHeight(e.data?.langIfr);
+  };
+  window.addEventListener("message", msgHandler, false);
+  // load iframe
+  const langLnksGet = () =>
+    Object.fromEntries(
+      [...document.querySelectorAll("a.interlanguage-link-target")]
+        .map((e) => ({
+          lang: e.getAttribute("lang"),
+          href: e.href,
+          language: e.textContent,
+        }))
+        .map((e) => [e.lang, e])
+    );
+  const columns = (document.body.clientWidth / 800) | 0;
+  console.log("multilang-wiki: " + columns + " columns");
+  const exlangFrameLoad = () => {
+    const langLnks = langLnksGet();
+    const avaliableLangs = langs
+      .filter((lang) => langLnks[lang])
+      .filter((lang, i) => i < columns);
+    console.log("Avaliable languages: " + avaliableLangs);
 
-        const width = (100 / (avaliableLangs.length + 1)).toFixed(2) + "vw";
-        const langIframeLoad = (lang = "en") => {
-            if (!langLnks[lang]) return null;
-            const count = [...document.querySelectorAll(".langIfr")].length;
-            document.body.setAttribute(
-                "style",
-                `width: ${width}; overflow-x: hidden`
-            );
-            document.body.querySelector(`.langIfr[lang=${lang}]`)?.remove();
-            const langIfr = createHtmlElement(`
+    const width = (100 / (avaliableLangs.length + 1)).toFixed(2) + "vw";
+    const langIframeLoad = (lang = "en") => {
+      if (!langLnks[lang]) return null;
+      const count = [...document.querySelectorAll(".langIfr")].length;
+      document.body.setAttribute(
+        "style",
+        `width: ${width}; overflow-x: hidden`
+      );
+      document.body.querySelector(`.langIfr[lang=${lang}]`)?.remove();
+      const langIfr = createHtmlElement(`
               <iframe
                 class="langIfr"
                 lang="${lang}"
                 src="${langLnks[lang].href + "#langIfr-" + lang}"
                 style="border: none; position:absolute; left: calc(${
-                    1 + count
+                  1 + count
                 } * ${width}); top: 0vh; width: ${width}; min-height: 100vh"
                 allow="fullscreen"
               ></iframe>`);
-            document.body.appendChild(langIfr);
-            return langIfr;
-        };
-
-        // the load 2st language for current page
-
-        avaliableLangs.forEach((lang) => langIframeLoad(lang));
-
-        // langs.find(lang => langIframeLoad(lang))
+      document.body.appendChild(langIfr);
+      return langIfr;
     };
-    window.addEventListener("load", exlangFrameLoad, false);
+
+    // the load 2st language for current page
+
+    avaliableLangs.forEach((lang) => langIframeLoad(lang));
+
+    // langs.find(lang => langIframeLoad(lang))
+  };
+  window.addEventListener("load", exlangFrameLoad, false);
 }
 
 function createHtmlElement(innerHTML = "<span>hello</span>") {
-    return Object.assign(document.createElement("div"), { innerHTML })
-        .children[0];
+  return Object.assign(document.createElement("div"), { innerHTML })
+    .children[0];
 }

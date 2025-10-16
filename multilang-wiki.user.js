@@ -21,7 +21,7 @@
 // @name:no          Flerspråklig visning av Wikipedia
 // @namespace        https://userscript.snomiao.com/
 // @author           snomiao@gmail.com
-// @version          0.0.9
+// @version          0.1.0
 // @description      View a Wikipedia entry with two (or more?) languages side by side for comparison and language learning.
 // @description:zh   以并列多语言视角浏览维基百科
 // @description:ja   比較と語学学習のために、ウィキペディアの記事を2つ（またはそれ以上？）の言語で並べて表示します。
@@ -59,9 +59,11 @@
 
 // const Langs = ['en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it', 'ko', 'pt', 'ar', 'vi', 'pl', 'uk', 'nl', 'sv', 'id', 'fi', 'no', 'tr', 'cs', 'da', 'he', 'hu', 'ro', 'th']
 // can modify this to your preferred languages, will be used to load the 2nd language iframe
-const langs = navigator.languages
-  .map((e) => e.replace(/-.*/, ""))
-  .reduce((acc, lang) => (acc.add(lang), acc), new Set());
+const langs = [
+  ...navigator.languages
+    .map((e) => e.replace(/-.*/, ""))
+    .reduce((acc, lang) => (acc.add(lang), acc), new Set()),
+];
 
 (async function main() {
   // hide sidebars
@@ -81,10 +83,8 @@ if (location.hash.match("#langIfr")) {
   const sendHeight = () =>
     parent.postMessage?.(
       {
-        langIfr: {
-          height: document.body.scrollHeight,
-          lang: location.hash.match?.(/#langIfr-(..)/)?.[1],
-        },
+        mulango_height: document.body.scrollHeight,
+        mulango_lang: location.hash.match?.(/#langIfr-(..)/)?.[1],
       },
       "*"
     );
@@ -95,16 +95,12 @@ if (location.hash.match("#langIfr")) {
   document.head.appendChild(createHtmlElement('<base target="_parent" />'));
 } else {
   // parent code recv iframe's height
-  const msgHandler = (e) => {
-    const setHeight = ({ height, lang }) =>
-      height &&
-      lang &&
+  window.addEventListener("message", (e) => {
+    e.data?.mulango_lang &&
       document
-        .querySelector?.(`.langIfr[lang=${lang}]`)
-        ?.setAttribute("height", height);
-    setHeight(e.data?.langIfr);
-  };
-  window.addEventListener("message", msgHandler, false);
+        ?.querySelector?.(`.langIfr[lang=${e.data?.mulango_lang}]`)
+        ?.setAttribute("height", e.data?.mulango_height);
+  });
   // load iframe
   const langLnksGet = () =>
     Object.fromEntries(

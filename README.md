@@ -44,7 +44,7 @@ To change which languages are displayed as the second view:
 2. Edit the Wikipedia Multi Language View script
 3. Find this line:
    ```javascript
-   const langs = ['en', 'ja', 'zh'] // modify this to your preferred languages
+   const langs = ["en", "ja", "zh"]; // modify this to your preferred languages
    ```
 4. Change the language codes to your preferred languages (in order of preference)
 5. Save your changes
@@ -54,6 +54,7 @@ Available language codes include: 'en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it'
 ## How It Works
 
 The script:
+
 1. Detects available language versions of the current Wikipedia article
 2. Creates a split-screen view with the current article on the left
 3. Loads the article in your preferred second language on the right
@@ -81,6 +82,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Author
 
 **Snowstar Miao** (snomiao)
+
 - Email: [snomiao@gmail.com](mailto:snomiao@gmail.com)
 - Website: [https://snomiao.com](https://snomiao.com)
 

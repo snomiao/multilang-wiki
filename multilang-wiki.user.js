@@ -51,7 +51,7 @@
 // @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
 //
-// ref:
+// ref: https://github.com/snomiao/multilang-wiki
 // @downloadURL-old  https://raw.githubusercontent.com/snomiao/userscript.js/main/src/wiki-multilang.user.js
 // [javascript - Resize Cross Domain Iframe Height - Stack Overflow]( https://stackoverflow.com/questions/22086722/resize-cross-domain-iframe-height )
 //
